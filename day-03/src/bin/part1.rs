@@ -3,6 +3,7 @@ use std::fs;
 #[cfg(feature = "dhat")]
 use dhat::{Dhat, DhatAlloc};
 
+
 #[cfg(feature = "dhat")]
 #[global_allocator]
 static ALLOCATOR: DhatAlloc = DhatAlloc;
@@ -34,7 +35,7 @@ fn p1(input: String) -> i32 {
     let mut gamma_rate = Vec::new();
     let mut epsilon_rate = Vec::new();
     for bit_val in bit_counts {
-        if bit_val < (number_of_inputs / 2) {
+        if bit_val <= (number_of_inputs / 2) {
             gamma_rate.push('1');
             epsilon_rate.push('0');
         } else {
@@ -48,7 +49,6 @@ fn p1(input: String) -> i32 {
         i32::from_str_radix(&epsilon_rate.into_iter().collect::<String>(), 2).unwrap();
     gamma_decimal * epsilon_decimal
 }
-
 
 #[test]
 fn part_1_example() {
@@ -67,6 +67,3 @@ fn part_1_example() {
         .to_string();
     assert_eq!(p1(input), 198);
 }
-
-#[test]
-fn part_2_example() {}
