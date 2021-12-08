@@ -16,33 +16,41 @@ fn main() {
     println!("Minimum fuel cost is {}", fuel_cost);
 }
 
-pub fn calc_shortest_distance(input: &str) -> u64 {
-    let (_, positions) = crab_positions(input).unwrap();
-    let max_position = positions.iter().max().unwrap();
-    let mut weighted_positions: BTreeMap<u16, u16> = BTreeMap::default();
+pub fn calc_shortest_distance(input: &str) -> u32 {
+    let (_, mut positions) = crab_positions(input).unwrap();
+    // let max_position = positions.iter();
+    // let mut weighted_positions: BTreeMap<u16, u16> = BTreeMap::default();
+    positions.sort_unstable();
 
-    positions.iter().for_each(|position| {
-        weighted_positions
-            .entry(*position)
-            .and_modify(|val| *val += 1)
-            .or_insert(1);
-    });
+    let median = *positions.get((positions.len() + 1) / 2).unwrap();
 
-    let mut distance_map = vec![0u64; (max_position + 1) as usize];
+    positions.iter().fold(0u32, |total, pos| {
+        total + (*pos as i32 - median as i32).abs() as u32
+    })
 
-    weighted_positions.iter().for_each(|(position, number)| {
-        for final_position in 0..=*max_position {
-            if position > &final_position {
-                let added_weight = (position - final_position) as u64 * *number as u64;
-                distance_map[final_position as usize] += added_weight;
-            } else {
-                let added_weight = (final_position - position) as u64 * *number as u64;
-                distance_map[final_position as usize] += added_weight;
-            }
-        }
-    });
+    // positions.iter().for_each(|position| {
+    //     weighted_positions
+    //         .entry(*position)
+    //         .and_modify(|val| *val += 1)
+    //         .or_insert(1);
+    // });
 
-    *distance_map.iter().min().unwrap()
+    // // let mut distance_map = vec![0u32; (max_position + 1) as usize];
+
+    // weighted_positions
+    //     .iter()
+    //     .map(|(position, number)| {
+    //         let mut total_fuel: u32 = 0;
+    //         for final_position in 0..=*max_position {
+    //             if position > &final_position {
+    //                total_fuel += (position - final_position) as u32 * *number as u32
+    //             } else {
+    //                total_fuel += (final_position - position) as u32 * *number as u32
+    //             }
+    //         }
+    //         total_fuel
+    //     })
+    //     .sum()
 }
 
 #[cfg(test)]
